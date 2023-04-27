@@ -23,7 +23,7 @@ const TransactionSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Please provide amount"],
   },
-  type: {
+  transType: {
     type: String,
     enum: ["debit", "credit"],
     required: true
@@ -39,12 +39,16 @@ const TransactionSchema = new mongoose.Schema({
   description: {
     type: String,
     default: function () {
-      if (this.type === "debit") {
+      if (this.transType === "debit") {
         return `Transfer to ${this.to}`
       }
       return `Recieved from ${this.from}`;
     },
     maxlength: 50
+  },
+  fees: {
+    type: Number,
+    default: 0.00
   }
 })
 

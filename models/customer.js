@@ -24,6 +24,10 @@ const CustomerSchema = new mongoose.Schema({
     type: Date,
     required: [true, "Please provide your date of birth"]
   },
+  address: {
+    type: String,
+    required: true,
+  },
   age: {
     type: Number,
     default: function() {
@@ -68,6 +72,10 @@ const CustomerSchema = new mongoose.Schema({
     type: Number,
     required: true,
     unique: true
+  },
+  postalCode: {
+    type: Number,
+    required: true
   }
 });
 

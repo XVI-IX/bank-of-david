@@ -20,6 +20,11 @@ const AccountSchema = new mongoose.Schema({
     default: 0.00,
     
   },
+  currency: {
+    type: String,
+    default: 'NGN',
+    required: true
+  },
   createdAt: {
     type: Date,
     default: new Date()
