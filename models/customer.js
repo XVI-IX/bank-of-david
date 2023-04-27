@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { UnauthenticatedError } = require('../errors');
 
 
-const UserSchema = new mongoose.Schema({
+const CustomerSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: [true, "Please include first name"],
@@ -42,15 +42,43 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide password"],
     minlength: 8
+  },
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
+  modifiedAt: {
+    type: Date,
+    default: new Date()
+  },
+  userName: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  phoneNumber: {
+    type: String,
+    unique: true,
+    match: [
+      /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+      "Please provide valid phone number"
+    ]
+  },
+  bvn: {
+    type: Number,
+    required: true,
+    unique: true
   }
 });
 
-UserSchema.pre('save', async function() {
+CustomerSchema.pre('save', async function() {
   const salt = await bcrypt.genSalt();
   this.password = bcrypt.hash(this.password, salt);
+  this.bvn = bcrypt.hash(this.bvn);
+
 });
 
-UserSchema.methods.createJWT = function () {
+CustomerSchema.methods.createJWT = function () {
   return jwt.sign({
     userId: this._id,
     userName: `${this.firstName} ${this.lastName}`
@@ -59,7 +87,7 @@ UserSchema.methods.createJWT = function () {
   })
 }
 
-UserSchema.methods.comparePassword = async function (reqPassword) {
+CustomerSchema.methods.comparePassword = async function (reqPassword) {
   try {
     const match = await bcrypt.compare(reqPassword, this.password);
     return match;
@@ -68,4 +96,4 @@ UserSchema.methods.comparePassword = async function (reqPassword) {
   }
 }
 
-module.exports = mongoose.model('users', UserSchema);
+module.exports = mongoose.model('customer', CustomerSchema);
