@@ -16,7 +16,7 @@ const auth = async (req, res, next) => {
   try {
     const payload = jwt.verify(token, process.env.SECRET);
 
-    const customer = await Customer.findById(payload._id).select(
+    const customer = await Customer.findById(payload.UserId).select(
       '-password -address -age -phoneNumber -bvn -postalCode');
     req.customer = customer;
 

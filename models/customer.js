@@ -84,8 +84,8 @@ const CustomerSchema = new mongoose.Schema({
 
 CustomerSchema.pre('save', async function() {
   const salt = await bcrypt.genSalt(10);
-  this.password = bcrypt.hash(this.password, salt);
-  this.bvn = bcrypt.hash(this.bvn, salt);
+  this.password = await bcrypt.hash(this.password, salt);
+  this.bvn = await bcrypt.hash(this.bvn, salt);
 });
 
 CustomerSchema.pre('save', async function() {
@@ -95,7 +95,7 @@ CustomerSchema.pre('save', async function() {
 CustomerSchema.methods.createJWT = function () {
   return jwt.sign({
     userId: this._id,
-    userName: `${this.firstName} ${this.lastName}`
+    userName: this.userName,
   }, process.env.SECRET, {
     expiresIn: process.env.SPAN
   })
