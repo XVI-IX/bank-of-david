@@ -4,6 +4,10 @@ const connectDB = require("./db/connect");
 const express = require('express');
 const app = express();
 
+// Middleware imports
+const { limiter } = require("./middleware");
+
+
 app.get('/', (req, res) => {
   res.send("We out");
 });
