@@ -31,7 +31,7 @@ const CustomerSchema = new mongoose.Schema({
   age: {
     type: Number,
     default: function() {
-      return Date().getFullYear() - this.dob.getFullYear();
+      return (new Date().getFullYear() - this.dob.getFullYear());
     }
   },
   email: {
@@ -59,17 +59,20 @@ const CustomerSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    default: function() {
+      return `${this.firstName} ${this.lastName}`;
+    }
   },
   phoneNumber: {
     type: String,
     unique: true,
     match: [
-      /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+      /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/,
       "Please provide valid phone number"
     ]
   },
   bvn: {
-    type: Number,
+    type: String,
     required: true,
     unique: true
   },
@@ -80,10 +83,13 @@ const CustomerSchema = new mongoose.Schema({
 });
 
 CustomerSchema.pre('save', async function() {
-  const salt = await bcrypt.genSalt();
+  const salt = await bcrypt.genSalt(10);
   this.password = bcrypt.hash(this.password, salt);
-  this.bvn = bcrypt.hash(this.bvn);
+  this.bvn = bcrypt.hash(this.bvn, salt);
+});
 
+CustomerSchema.pre('save', async function() {
+  this.dob = this.dob.getDate();
 });
 
 CustomerSchema.methods.createJWT = function () {

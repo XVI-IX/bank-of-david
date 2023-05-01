@@ -3,7 +3,8 @@ const { Customer } = require("../models");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const { NotFoundError } = require("../../Jobs api/errors");
 
-const signup = async (res, req) => {
+const signup = async (req, res) => {
+  console.log(req.body);
   const customer = await Customer.create({ ...req.body });
   const token = customer.createJWT();
 
@@ -15,14 +16,14 @@ const signup = async (res, req) => {
   });
 }
 
-const login = async (res, req) => {
+const login = async (req, res) => {
   const { email, password } = req.body
 
   if (!email || !password) {
     throw new BadRequestError("Please provide email and password")
   }
 
-  const customer = Customer.findOne({ email});
+  const customer = await Customer.findOne({ email});
   if (!customer) {
     throw new NotFoundError("Customer could not be found");
   }
@@ -42,8 +43,13 @@ const login = async (res, req) => {
   })
 }
 
+const testing = (req, res) => {
+  res.send("Testing route");
+}
+
 
 module.exports = {
   signup,
   login,
+  testing
 }
