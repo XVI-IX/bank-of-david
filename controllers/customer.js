@@ -8,16 +8,34 @@ const { NotFoundError } = require("../errors");
 
 const getProfile = async (req, res) => {
   const customer = req.customer;
+  const idString = String(customer._id)
 
-  const data = await Customer.findById(customer._id).select("-password");
+  console.log(customer);
 
-  if (!data) {
-    throw new NotFoundError("Customer not found");
+  const exists = await redis.exists(idString);
+
+  if (exists === 1) {
+    let data = await redis.get(idString);
+    data = JSON.parse(data);
+
+    console.log("From redis");
+
+    res.status(StatusCodes.OK).json({
+      data
+    })
+  } else {
+    const data = await Customer.findById(customer._id).select("-password");
+
+    if (!data) {
+      throw new NotFoundError("Customer not found");
+    }
+  
+    await redis.set(idString, JSON.stringify(data));
+  
+    res.status(StatusCodes.OK).json({
+      data
+    });
   }
-
-  res.status(StatusCodes.OK).json({
-    data
-  });
 }
 
 module.exports = {
