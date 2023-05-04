@@ -10,40 +10,33 @@ const getProfile = async (req, res) => {
   const customer = req.customer;
   const idString = String(customer._id)
 
-  console.log(customer);
-  try {
-    const exists = await redis.exists(idString);
+  // console.log(customer);
 
-    if (exists === 1) {
-      let data = await redis.get(idString);
-      data = JSON.parse(data);
+  const exists = await redis.exists(idString);
 
-      console.log("From redis");
+  if (exists === 1) {
+    let data = await redis.get(idString);
+    data = JSON.parse(data);
 
-      return res.status(StatusCodes.OK).json({
-        data
-      });
-    } else {
-      const data = await Customer.findById(customer._id).select("-password");
+    console.log("From redis");
 
-      if (!data) {
-        throw new NotFoundError("Customer not found");
-      }
-    
-      await redis.set(idString, JSON.stringify(data));
-    
-      return res.status(StatusCodes.OK).json({
-        data
-      });
+    res.status(StatusCodes.OK).json({
+      data
+    });
+    return;
+  } else {
+    const data = await Customer.findById(customer._id).select("-password");
+
+    if (!data) {
+      throw new NotFoundError("Customer not found");
     }
-  } catch (error) {
-    console.log(error);
-    return res.status(StatusCodes.SERVICE_UNAVAILABLE).json({
-      error: -1,
-      msg: "Redis could not connect"
-    })
-  }
   
+    await redis.set(idString, JSON.stringify(data));
+  
+    res.status(StatusCodes.OK).json({
+      data
+    });
+  }
 }
 
 module.exports = {

@@ -5,7 +5,7 @@ const redis = new Redis();
 
 const limiter = async (req, res, next) => {
   try {
-    const token = req.headers.authorization;
+    const token = req.headers.token;
     const exists = await redis.exists(token);
 
     if (exists === 1) {
@@ -22,7 +22,7 @@ const limiter = async (req, res, next) => {
         };
 
         await redis.set(token, JSON.stringify(body));
-        next();
+        return next();
       }
       if (timeDiff < 1) {
         // if within time limit
@@ -34,14 +34,12 @@ const limiter = async (req, res, next) => {
           });
         }
       }
-
       data.count++;
       await redis.set(token, JSON.stringify(data));
+      return next();
 
-      next();
     } else {
       // Create new redis key:value pair
-
       const body = {
         count: 1,
         timeStamp: new Date().getTime()
@@ -51,7 +49,7 @@ const limiter = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    return res.status(StatusCodes.BAD_GATEWAY).json({
+    res.status(StatusCodes.BAD_GATEWAY).json({
       error: -1,
       msg: "Redis could not connect"
     })
