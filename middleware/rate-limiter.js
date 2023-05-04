@@ -5,11 +5,11 @@ const redis = new Redis();
 
 const limiter = async (req, res, next) => {
   try {
-    const token = req.headers.token;
-    const exists = redis.exists(token);
+    const token = req.headers.authorization;
+    const exists = await redis.exists(token);
 
     if (exists === 1) {
-      const result = redis.get(token);
+      const result = await redis.get(token);
       const data = JSON.parse(result);
       const currentTime = new Date().getTime();
       const timeDiff = (currentTime - data.timeStamp) / 60000;
@@ -28,7 +28,7 @@ const limiter = async (req, res, next) => {
         // if within time limit
         if (data.count > 3) {
           // if allowed access times exceeded
-          res.status(StatusCodes.SERVICE_UNAVAILABLE).json({
+          return res.status(StatusCodes.SERVICE_UNAVAILABLE).json({
             error: -1,
             msg: "API access limit exceeded"
           });
@@ -51,7 +51,7 @@ const limiter = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    res.status(StatusCodes.BAD_GATEWAY).json({
+    return res.status(StatusCodes.BAD_GATEWAY).json({
       error: -1,
       msg: "Redis could not connect"
     })
