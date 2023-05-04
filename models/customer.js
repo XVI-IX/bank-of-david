@@ -96,9 +96,11 @@ CustomerSchema.methods.createJWT = function () {
   return jwt.sign({
     userId: this._id,
     userName: this.userName,
-  }, process.env.SECRET, {
+  }, 
+  process.env.SECRET,
+  {
     expiresIn: process.env.SPAN
-  })
+  });
 }
 
 CustomerSchema.methods.comparePassword = async function (reqPassword) {

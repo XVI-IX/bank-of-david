@@ -1,4 +1,8 @@
 const { Customer } = require("../models");
+
+const Redis = require("ioredis");
+const redis = new Redis();
+
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError } = require("../errors");
 
@@ -13,7 +17,7 @@ const getProfile = async (req, res) => {
 
   res.status(StatusCodes.OK).json({
     data
-  })
+  });
 }
 
 module.exports = {
