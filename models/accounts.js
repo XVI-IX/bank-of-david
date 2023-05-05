@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const mongoose = require("mongoose");
+const { faker } = require('@faker-js/faker');
 
 const AccountSchema = new mongoose.Schema({
   customerId: {
@@ -13,7 +14,12 @@ const AccountSchema = new mongoose.Schema({
   accountName: {
     type: String,
     required: true,
-    maxlength: 15
+  },
+  accountNumber: {
+    type: Number,
+    required: true,
+    default: faker.finance.account(10),
+    unique: true,
   },
   balance: {
     type: Number,

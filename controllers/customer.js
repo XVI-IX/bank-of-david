@@ -1,4 +1,4 @@
-const { Customer } = require("../models");
+const { Customer, Account } = require("../models");
 
 const Redis = require("ioredis");
 const redis = new Redis();
@@ -32,7 +32,7 @@ const getCustomerProfile = async (req, res) => {
         throw new NotFoundError("Customer not found");
       }
 
-      await redis.set(idString, JSON.stringify(data));
+      await redis.set(idString, JSON.stringify(data), 'ex', 720);
 
       res.status(StatusCodes.OK).json({
         data
@@ -47,37 +47,49 @@ const getCustomerProfile = async (req, res) => {
 const editCustomerProfile = async (req, res) => {
   const { phoneNumber, email} = req.body;
 
-  const customer = await Customer.findOne({ _id: req.session._id });
-  if (!customer) {
+  // console.log(req.session._id);
+  if (!req.session._id) {
     throw new UnauthenticatedError("Session Expired");
   }
 
-  const compare = await customer.comparePassword(req.body.password);
+  const customer = await Customer.findOne({ _id: req.session._id });
+  if (!customer) {
+    throw new NotFoundError("Customer Not Found");
+  }
 
+  const compare = await customer.comparePassword(req.body.password);
   if (!compare) {
     throw new UnauthenticatedError("Invalid password");
   }
+
   try {
+    console.log("try block")
     await Customer.findOneAndUpdate({
       _id: customer._id
     }, {
       email: email,
       phoneNumber: phoneNumber
-    })
-
-    res.status( Status.OK ).json({
+    }, {
+      new: true,
+      runValidators: true
+    });
+    console.log("updated");
+    res.status( StatusCodes.OK ).json({
       msg: "Profile updated",
       success: true
     });
   } catch (error) {
+    console.log(error.message);
     throw new BadRequestError("Could not update customer data");
   }
-
-  res.send({ phoneNumber, email });
-  console.log(phoneNumber, email);
 };
 
-// const getAccounts;
+const getAccounts = async (req, res) => {
+  const customerId = req.session._id;
+
+  const accounts = await Account.findOne({customerId: customerId});
+  console.log(accounts);
+};
 
 // const getCards;
 // const deleteCard
@@ -90,4 +102,5 @@ const editCustomerProfile = async (req, res) => {
 module.exports = {
   getCustomerProfile,
   editCustomerProfile,
+  getAccounts
 }

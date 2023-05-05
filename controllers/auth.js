@@ -1,11 +1,16 @@
 const { StatusCodes } = require("http-status-codes");
-const { Customer } = require("../models");
+const { Customer, Account } = require("../models");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const { NotFoundError } = require("../../Jobs api/errors");
 
 const signup = async (req, res) => {
   console.log(req.body);
   const customer = await Customer.create({ ...req.body });
+  console.log(customer._id);
+  await Account.create({
+    customerId: customer._id,
+    accountName: `${req.body.firstName} ${req.body.lastName}`
+  });
   const token = customer.createJWT();
 
   res.status(StatusCodes.CREATED).json({
