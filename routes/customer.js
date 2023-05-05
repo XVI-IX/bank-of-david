@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const { getProfile } = require("../controllers/customer");
+const { getCustomerProfile, editCustomerProfile } = require("../controllers/customer");
 
-router.route("/").get(getProfile);
+router.route("/").get(getCustomerProfile);
+router.route("/:_id").patch(editCustomerProfile);
 
 module.exports = router;

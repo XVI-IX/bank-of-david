@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UnauthenticatedError } = require('../errors');
+const { check } = require('../functions');
 
 
 const CustomerSchema = new mongoose.Schema({
@@ -68,8 +69,14 @@ const CustomerSchema = new mongoose.Schema({
     unique: true,
     match: [
       /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/,
-      "Please provide valid phone number"
-    ]
+      "Please provide valid phone number ({country code}{number} or +{country code}{number})"
+    ],
+    validate: {
+      validator: function(value) {
+        return check(value);
+      },
+      message: props => `${props.value} is not a valid phone number!`
+    }
   },
   bvn: {
     type: String,

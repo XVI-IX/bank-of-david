@@ -6,7 +6,7 @@ const redis = new Redis();
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError } = require("../errors");
 
-const getProfile = async (req, res) => {
+const getCustomerProfile = async (req, res) => {
   const customer = req.customer;
   const idString = String(customer._id)
 
@@ -39,6 +39,24 @@ const getProfile = async (req, res) => {
   }
 }
 
+const editCustomerProfile = async (req, res) => {
+  const params = { ...req.params }
+
+  res.send(params);
+  console.log(params);
+};
+
+// const getAccounts;
+
+// const getCards;
+// const deleteCard
+// const editCard;
+
+
+// const getInfo
+
+
 module.exports = {
-  getProfile,
+  getCustomerProfile,
+  editCustomerProfile,
 }
