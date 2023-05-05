@@ -23,7 +23,7 @@ const login = async (req, res) => {
     throw new BadRequestError("Please provide email and password")
   }
 
-  const customer = await Customer.findOne({ email});
+  const customer = await Customer.findOne({ email });
   if (!customer) {
     throw new NotFoundError("Customer could not be found");
   }
@@ -34,6 +34,8 @@ const login = async (req, res) => {
   }
 
   const token = customer.createJWT();
+
+  req.session._id = customer._id;
 
   res.status(StatusCodes.OK).json({
     customer: {

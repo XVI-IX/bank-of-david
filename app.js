@@ -3,6 +3,7 @@ const connectDB = require("./db/connect");
 
 const express = require('express');
 const app = express();
+const session = require('express-session');
 
 // Middleware imports
 const { limiter, auth } = require("./middleware");
@@ -13,6 +14,14 @@ const customerRouter = require("./routes/customer");
 
 
 app.use(express.json());
+app.use(session({
+  secret: process.env.SECRET,
+  cookie: {
+    maxAge: 10 * 60 * 1000,
+  },
+  saveUninitialized: false,
+  resave: false
+}))
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/customers', auth, limiter, customerRouter);
