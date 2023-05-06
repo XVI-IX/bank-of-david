@@ -29,7 +29,8 @@ const AccountSchema = new mongoose.Schema({
   currency: {
     type: String,
     default: 'NGN',
-    required: true
+    required: true,
+    enum: ['NGN', 'USD', 'EUR', 'GBP']
   },
   createdAt: {
     type: Date,
