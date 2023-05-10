@@ -2,8 +2,8 @@
   "author": "David-Daniel Ojebiyi",
   "name": "bank-of-david",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "An application imitating a mobile bank app",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon run app.js",
     "test": "echo \"Error: no test specified\" && exit 1"

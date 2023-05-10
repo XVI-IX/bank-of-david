@@ -4,13 +4,16 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 const { NotFoundError } = require("../../Jobs api/errors");
 
 const signup = async (req, res) => {
+  
   console.log(req.body);
   const customer = await Customer.create({ ...req.body });
   console.log(customer._id);
-  await Account.create({
+  req.session.customerId = customer._id;
+  const account = await Account.create({
     customerId: customer._id,
     accountName: `${req.body.firstName} ${req.body.lastName}`
   });
+  req.session.accountId = account._id;
   const token = customer.createJWT();
 
   res.status(StatusCodes.CREATED).json({
@@ -40,7 +43,7 @@ const login = async (req, res) => {
 
   const token = customer.createJWT();
 
-  req.session._id = customer._id;
+  req.session.customerId = customer._id;
 
   res.status(StatusCodes.OK).json({
     customer: {
