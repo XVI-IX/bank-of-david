@@ -56,7 +56,7 @@ const sendFunds = async (req, res) => {
 
   const preSend = await Account.findById(accountId);
 
-  if (preSend.balance > 0) {
+  if (preSend.balance > amount) {
     try {
       const result = await send({
         "account_bank": account_bank,
