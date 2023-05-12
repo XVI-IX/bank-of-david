@@ -8,12 +8,20 @@ const TransactionSchema = new mongoose.Schema({
       ref: "account"
     }
   },
+  customerId: {
+    type: String,
+    desc: {
+      type: mongoose.Types.ObjectId,
+      ref: "customer"
+    }
+  },
   cardId: {
     type: String,
     desc: {
       type: mongoose.Types.ObjectId,
       ref: "card"
-    }
+    },
+    default: null,
   },
   date: {
     type: Date,
@@ -26,13 +34,18 @@ const TransactionSchema = new mongoose.Schema({
   transType: {
     type: String,
     enum: ["debit", "credit"],
-    required: true
+    required: true,
+    default: "debit"
   },
-  to: {
+  accountNumber: {
     type: String,
     required: true
   },
-  from: {
+  bankCode: {
+    type: Number,
+    required: true,
+  },
+  fullName: {
     type: String,
     required: true
   },
@@ -49,6 +62,14 @@ const TransactionSchema = new mongoose.Schema({
   fees: {
     type: Number,
     default: 0.00
+  },
+  reference: {
+    type: String,
+    required: true,
+  },
+  bankName: {
+    required: true,
+    type: String
   }
 })
 

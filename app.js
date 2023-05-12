@@ -10,7 +10,8 @@ const { limiter, auth } = require("./middleware");
 
 // Router Imports
 const authRouter = require("./routes/auth");
-const customerRouter = require("./routes/customer");
+const customerRouter = require("./routes/customer")
+const transactionRouter = require("./routes/transactions");
 
 
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use(session({
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/customers', auth, limiter, customerRouter);
+app.use('/api/v1/transactions', auth, limiter, transactionRouter);
 
 
 const start = async () => {

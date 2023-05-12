@@ -170,8 +170,30 @@ const addCard = async (req, res) => {
     msg: "Card saved successfully"
   });
 };
-// const deleteCard;
-// const editCard;
+const deleteCard = async (req, res) => {
+  const customerId = req.session.customerId;
+  const accountId = req.params.accountId;
+  const cardId = req.params.cardId;
+
+  if (!customerId) {
+    throw new UnauthenticatedError("Please Log in");
+  }
+
+  try {
+    await Card.deleteOne({
+      _id: cardId,
+      accountId: accountId
+    });
+
+    return res.status( StatusCodes.OK ).json({
+      msg: "Deleted Successfully",
+      success: true
+    })
+  } catch (error) {
+    console.log(error);
+    throw new BadRequestError("Please try again");
+  }
+};
 
 
 // const getInfo
@@ -182,5 +204,6 @@ module.exports = {
   editCustomerProfile,
   getAccounts,
   getCards,
-  addCard
+  addCard,
+  deleteCard
 }
