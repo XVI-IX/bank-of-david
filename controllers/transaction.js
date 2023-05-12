@@ -1,4 +1,4 @@
-const { Transaction } = require("../models");
+const { Transaction, Account } = require("../models");
 
 const Redis = require("ioredis");
 const redis = new Redis();
@@ -62,6 +62,11 @@ const sendFunds = async (req, res) => {
       "currency": "NGN",
       "debit_currency": "NGN"
     });
+
+    const account = await Account.findByIdAndUpdate(accountId, {
+      "balance": account.balance - amount
+    });
+
     const transaction = await Transaction.create({
       customerId: req.session.customerId,
       accountId: accountId,
