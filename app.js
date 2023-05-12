@@ -12,6 +12,8 @@ const { limiter, auth } = require("./middleware");
 const authRouter = require("./routes/auth");
 const customerRouter = require("./routes/customer")
 const transactionRouter = require("./routes/transactions");
+const accountRouter = require("./routes/accounts");
+const cardRouter = require("./routes/cards");
 
 
 app.use(express.json());
@@ -27,7 +29,8 @@ app.use(session({
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/customers', auth, limiter, customerRouter);
 app.use('/api/v1/transactions', auth, limiter, transactionRouter);
-
+app.use('/api/v1/account', auth, limiter, accountRouter);
+app.use('/accounts/:accountId/cards', auth, limiter, cardRouter);
 
 const start = async () => {
   try {

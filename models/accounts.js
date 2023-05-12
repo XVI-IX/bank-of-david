@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const mongoose = require("mongoose");
 const { faker } = require('@faker-js/faker');
+const Customer = require('./customer');
 
 const AccountSchema = new mongoose.Schema({
   customerId: {
@@ -14,6 +15,10 @@ const AccountSchema = new mongoose.Schema({
   accountName: {
     type: String,
     required: true,
+    default: async function() {
+      const customer = await Customer.findById(this.customerId)
+      return `${customer.firstName} ${customer.lastName}`
+    }
   },
   accountNumber: {
     type: Number,

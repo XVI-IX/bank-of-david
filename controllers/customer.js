@@ -6,7 +6,7 @@ const redis = new Redis();
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
 const { UnauthenticatedError } = require("../../Jobs api/errors");
-const customer = require("../models/customer");
+const { sessionExpired } = require("../functions");
 
 const getCustomerProfile = async (req, res) => {
   const customer = req.customer;
@@ -42,16 +42,13 @@ const getCustomerProfile = async (req, res) => {
   }
 
   throw new UnauthenticatedError("Session Expired, Login");
-
 }
 
 const editCustomerProfile = async (req, res) => {
   const { phoneNumber, email} = req.body;
 
   // console.log(req.session.customerId);
-  if (!req.session.customerId) {
-    throw new UnauthenticatedError("Session Expired");
-  }
+  sessionExpired();
 
   const customer = await Customer.findOne({ _id: req.session.customerId });
   if (!customer) {
@@ -85,125 +82,31 @@ const editCustomerProfile = async (req, res) => {
   }
 };
 
-const getAccounts = async (req, res) => {
+const getBalance = async (req, res) => {
   const customerId = req.session.customerId;
 
-  if (!customerId) {
-    throw new UnauthenticatedError("Please log in");
-  };
+  sessionExpired();
 
   try {
-    const exists = await redis.exists(`${customerId}accounts`);
-
-    if (exists === 1) {
-      let data = await redis.get(`${customerId}accounts`);
-
-      console.log("From redis");
-
-      res.status(StatusCodes.OK).json({
-        data
-      });
-      return;
-    } else {
-      const accounts = await Account.find({customerId: customerId});
-
-      console.log(accounts);
-
-      if (!accounts) {
-        throw new NotFoundError("Customer  accounts not found");
-      }
-
-      await redis.set(`${customerId}accounts`, JSON.stringify(accounts), 'ex', 720);
-
-      res.status(StatusCodes.OK).json({
-        accounts
-      });
-    }
-  } catch (error) {
-    res.status( StatusCodes.BAD_GATEWAY).json({
-      error: -1,
-      msg: "Error, try again"
-    });
-  }
-};
-
-const getCards = async (req, res) => {
-  const customerId = req.session.customerId;
-  const accountId = req.params.accountId;
-
-  if (!customerId) {
-    throw new UnauthenticatedError("Please Log in");
-  }
-  const cards = await Card.findOne({ accountId: accountId})
-                          .select("-cvv -cardNumber");
+    const accounts = await Account.find({customerId: customerId});
+    let balance = 0;
   
-  if (!cards) {
-    return res.status( StatusCodes.NOT_FOUND).json({
-      msg: "No Cards found for this customer"
-    })
-  }
-
-  return res.status( StatusCodes.OK ).json({
-    cards
-  });
-};
-
-const addCard = async (req, res) => {
-  const customerId = req.session.customerId;
-  const accountId = req.params.accountId;
-
-  if (!customerId) {
-    throw new UnauthenticatedError("Please log in");
-  }
-
-  req.body['accountId'] = accountId;
-  const card = await Card.create({...req.body});
-
-  if (!card) {
-    return res.status( StatusCodes.BAD_GATEWAY ).json({
-      error: -1,
-      msg: "Card details not saved"
+    for (let account of accounts) {
+      balance += account.balance;
+    }
+  
+    res.status( StatusCodes.OK ).json({
+      balance: balance
     });
-  }
-
-  res.status( StatusCodes.OK ).json({
-    msg: "Card saved successfully"
-  });
-};
-const deleteCard = async (req, res) => {
-  const customerId = req.session.customerId;
-  const accountId = req.params.accountId;
-  const cardId = req.params.cardId;
-
-  if (!customerId) {
-    throw new UnauthenticatedError("Please Log in");
-  }
-
-  try {
-    await Card.deleteOne({
-      _id: cardId,
-      accountId: accountId
-    });
-
-    return res.status( StatusCodes.OK ).json({
-      msg: "Deleted Successfully",
-      success: true
-    })
   } catch (error) {
     console.log(error);
     throw new BadRequestError("Please try again");
   }
-};
-
-
-// const getInfo
+}
 
 
 module.exports = {
   getCustomerProfile,
   editCustomerProfile,
-  getAccounts,
-  getCards,
-  addCard,
-  deleteCard
+  getBalance,
 }
