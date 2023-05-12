@@ -46,6 +46,7 @@ const getTransaction = async (req, res) => {
     throw new NotFoundError("Transaction record not found");
   }
 }
+
 const sendFunds = async (req, res) => {
   const { 
     amount, accountNumber,
@@ -53,38 +54,48 @@ const sendFunds = async (req, res) => {
     accountId
   } = req.body;
 
-  try {
-    const result = await send({
-      "account_bank": account_bank,
-      "account_number": accountNumber,
-      "amount": amount,
-      "narration": narration,
-      "currency": "NGN",
-      "debit_currency": "NGN"
-    });
+  const preSend = await Account.findById(accountId);
 
-    const account = await Account.findByIdAndUpdate(accountId, {
-      "balance": account.balance - amount
-    });
-
-    const transaction = await Transaction.create({
-      customerId: req.session.customerId,
-      accountId: accountId,
-      amount: result.amount,
-      accountNumber: result.accountNumber,
-      bankCode: result.account_bank,
-      description: result.narration,
-      fees: result.fee,
-      bankName: result.bank_name,
-      fullName: result.full_name,
-    });
-
-    res.status( StatusCodes.OK ).json({
-      transaction
-    });
-  } catch (error) {
-    console.log(error)
+  if (preSend.balance > 0) {
+    try {
+      const result = await send({
+        "account_bank": account_bank,
+        "account_number": accountNumber,
+        "amount": amount,
+        "narration": narration,
+        "currency": "NGN",
+        "debit_currency": "NGN"
+      });
+  
+      const account = await Account.findByIdAndUpdate(accountId, {
+        "balance": preSend.balance - amount
+      });
+  
+      const transaction = await Transaction.create({
+        customerId: req.session.customerId,
+        accountId: accountId,
+        amount: result.amount,
+        accountNumber: result.accountNumber,
+        bankCode: result.account_bank,
+        description: result.narration,
+        fees: result.fee,
+        bankName: result.bank_name,
+        fullName: result.full_name,
+      });
+  
+      res.status( StatusCodes.OK ).json({
+        transaction
+      });
+    } catch (error) {
+      console.log(error)
+    }
+  } else {
+    return res.status( StatusCodes.BAD_REQUEST ).json({
+      error: -1,
+      msg: "Insufficient funds"
+    })
   }
+  
 };
 
 
