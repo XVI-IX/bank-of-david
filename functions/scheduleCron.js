@@ -12,9 +12,18 @@ const paymentCron = async () => {
 
   for (let schedule in data) {
     if (schedule.frequency === "daily") {
-      cron.schedule("* * */23 * *", job)
+      cron.schedule("* */23 * *", job)
     } else if (schedule.frequency === "weekly") {
-      cron.schedule("")
+      cron.schedule(`* * * * */${schedule.day}`, job)
+    } else if (schedule.frequency === "monthly") {
+      cron.schedule(`* * */${schedule.date} * *`, job)
+    } else {
+      return res.json({
+        msg: "Invalid frequency",
+        error: -1
+      });
     }
   }
 }
+
+module.exports = paymentCron;

@@ -14,6 +14,7 @@ const customerRouter = require("./routes/customer")
 const transactionRouter = require("./routes/transactions");
 const accountRouter = require("./routes/accounts");
 const cardRouter = require("./routes/cards");
+const paymentCron = require('./functions/scheduleCron');
 
 
 app.use(express.json());
@@ -38,6 +39,7 @@ const start = async () => {
     app.listen(process.env.PORT, () => {
       console.log(`Listening on port ${process.env.PORT}`);
     })
+    paymentCron();
   } catch (err) {
     console.log(err);
   }

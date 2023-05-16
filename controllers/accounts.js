@@ -145,7 +145,8 @@ const schedulePayment = async (req, res) => {
   schedule_date = new Date(schedule_date);
   let minute = schedule_date.getMinutes();
   let hour = schedule_date.getHours();
-  let day = schedule_date.getDays();
+  let day = schedule_date.getDay();
+  let date = schedule_date.getDate();
 
   const schedule = {
     schedule_name,
@@ -165,6 +166,8 @@ const schedulePayment = async (req, res) => {
     frequency,
     minute,
     hour,
+    day,
+    date,
     data: {
       accountId,
       amount,
