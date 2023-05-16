@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
-const TransactionSchema = new mongoose.Schema({
+const ScheduleSchema = new mongoose.Schema({
+  schedule_name: {
+    type: String,
+    required: [true, "Please provide a schedule name"]
+  },
   accountId: {
     type: String,
     desc: {
@@ -23,9 +27,17 @@ const TransactionSchema = new mongoose.Schema({
     },
     default: null,
   },
-  date: {
+  created_at: {
     type: Date,
     default: new Date()
+  },
+  modified_at: {
+    type: Date,
+    default: new Date()
+  },
+  schedule_date: {
+    type: Date,
+    required: [true, "Please enter a schedule date"]
   },
   amount: {
     type: Number,
@@ -63,14 +75,14 @@ const TransactionSchema = new mongoose.Schema({
     type: Number,
     default: 0.00
   },
-  reference: {
-    type: String,
-    required: true,
-  },
   bankName: {
     required: true,
     type: String
   },
+  frequency: {
+    type: String,
+    required: [true, "Please provide the schedule frequency"]
+  }
 })
 
-module.exports = mongoose.model('transaction', TransactionSchema);
+module.exports = mongoose.model('schedules', ScheduleSchema);

@@ -1,20 +1,20 @@
-const { Transaction, Account } = require("../models");
+const { Transaction, Account, Schedule } = require("../models");
 
 const Redis = require("ioredis");
 const redis = new Redis();
+const cron = require("node-cron");
+
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
 const { UnauthenticatedError } = require("../../Jobs api/errors");
-const customer = require("../models/customer");
+const { sessionExpired } = require("../functions");
 const send = require("../functions/sendFunds");
 
 const getTransactions = async (req, res) => {
   const customerId = req.session.customerId;
 
-  if (!customerId) {
-    throw new UnauthenticatedError("Please Log in");
-  }
+  sessionExpired();
 
   const transactions = await Transaction.find({customerId});
 
@@ -23,14 +23,11 @@ const getTransactions = async (req, res) => {
   })
 };
 
-
 const getTransaction = async (req, res) => {
   const customerId = req.session.customerId;
   const transactionId = req.params.transactionId;
 
-  if (!customerId) {
-    throw new UnauthenticatedError("Please log in");
-  }
+  sessionExpired();
 
   const transaction = await Transaction.findById(transactionId);
 
@@ -47,60 +44,7 @@ const getTransaction = async (req, res) => {
   }
 }
 
-const sendFunds = async (req, res) => {
-  const { 
-    amount, accountNumber,
-    account_bank, narration,
-    accountId
-  } = req.body;
-
-  const preSend = await Account.findById(accountId);
-
-  if (preSend.balance > amount) {
-    try {
-      const result = await send({
-        "account_bank": account_bank,
-        "account_number": accountNumber,
-        "amount": amount,
-        "narration": narration,
-        "currency": "NGN",
-        "debit_currency": "NGN"
-      });
-  
-      const account = await Account.findByIdAndUpdate(accountId, {
-        "balance": preSend.balance - amount
-      });
-  
-      const transaction = await Transaction.create({
-        customerId: req.session.customerId,
-        accountId: accountId,
-        amount: result.amount,
-        accountNumber: result.accountNumber,
-        bankCode: result.account_bank,
-        description: result.narration,
-        fees: result.fee,
-        bankName: result.bank_name,
-        fullName: result.full_name,
-      });
-  
-      res.status( StatusCodes.OK ).json({
-        transaction
-      });
-    } catch (error) {
-      console.log(error)
-    }
-  } else {
-    return res.status( StatusCodes.BAD_REQUEST ).json({
-      error: -1,
-      msg: "Insufficient funds"
-    })
-  }
-  
-};
-
-
 module.exports = {
   getTransactions,
   getTransaction,
-  sendFunds,
 }
