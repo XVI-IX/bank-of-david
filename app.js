@@ -27,6 +27,10 @@ app.use(session({
   resave: false
 }))
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the bank of David");
+})
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/customers', auth, limiter, customerRouter);
 app.use('/api/v1/transactions', auth, limiter, transactionRouter);
