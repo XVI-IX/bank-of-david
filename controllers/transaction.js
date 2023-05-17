@@ -7,7 +7,7 @@ const cron = require("node-cron");
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
-const { UnauthenticatedError } = require("../../Jobs api/errors");
+const { UnauthenticatedError } = require("../errors");
 const { sessionExpired } = require("../functions");
 const send = require("../functions/sendFunds");
 

@@ -5,7 +5,7 @@ const redis = new Redis();
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
-const { UnauthenticatedError } = require("../../Jobs api/errors");
+const { UnauthenticatedError } = require("../errors");
 const { sessionExpired } = require("../functions");
 
 const getCustomerProfile = async (req, res) => {
