@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const { Customer, Account } = require("../models");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
-const { NotFoundError } = require("../../Jobs api/errors");
+const { NotFoundError } = require("../errors");
 
 const signup = async (req, res) => {
   
