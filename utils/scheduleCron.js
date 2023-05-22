@@ -1,9 +1,10 @@
+require("dotenv").config();
+const { REDIS_URL } = process.env
+
 const cron = require("node-cron");
 const Redis = require("ioredis");
-const redis = new Redis();
+const redis = new Redis(REDIS_URL);
 
-const { send } = require("./sendFunds");
-const { Account } = require("../models");
 const job = require("./cronJob");
 
 const paymentCron = async () => {

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UnauthenticatedError } = require('../errors');
-const { check } = require('../functions');
+const { check } = require('../utils');
 
 
 const CustomerSchema = new mongoose.Schema({

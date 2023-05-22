@@ -1,11 +1,8 @@
 const {Card} = require("../models");
 
-const Redis = require("ioredis");
-const redis = new Redis();
-
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError } = require("../errors");
-const { sessionExpired } = require("../functions");
+const { sessionExpired } = require("../utils");
 
 const getCards = async (req, res) => {
   const accountId = req.params.accountId;

@@ -1,15 +1,10 @@
+
 const { Transaction, Account, Schedule } = require("../models");
-
-const Redis = require("ioredis");
-const redis = new Redis();
-const cron = require("node-cron");
-
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
 const { UnauthenticatedError } = require("../errors");
-const { sessionExpired } = require("../functions");
-const send = require("../functions/sendFunds");
+const { sessionExpired } = require("../utils");
 
 const getTransactions = async (req, res) => {
   const customerId = req.session.customerId;

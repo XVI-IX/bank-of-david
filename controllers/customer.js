@@ -1,12 +1,15 @@
+require("dotenv").config()
+const { REDIS_URL } = process.env
+
 const { Customer, Account, Card } = require("../models");
 
 const Redis = require("ioredis");
-const redis = new Redis();
+const redis = new Redis(REDIS_URL);
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
 const { UnauthenticatedError } = require("../errors");
-const { sessionExpired } = require("../functions");
+const { sessionExpired } = require("../utils");
 
 const getCustomerProfile = async (req, res) => {
   const customer = req.customer;
