@@ -4,7 +4,7 @@ const { Transaction, Account, Schedule } = require("../models");
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
 const { UnauthenticatedError } = require("../errors");
-const { sessionExpired } = require("../utils");
+const { sessionExpired } = require("../functions");
 
 const getTransactions = async (req, res) => {
   const customerId = req.session.customerId;

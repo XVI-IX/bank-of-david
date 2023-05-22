@@ -8,7 +8,7 @@ const redis = new Redis(REDIS_URL);
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
 const { UnauthenticatedError } = require("../errors");
-const { sessionExpired } = require("../utils");
+const { sessionExpired } = require("../functions");
 
 const getAccounts = async (req, res) => {
   const customerId = req.session.customerId;

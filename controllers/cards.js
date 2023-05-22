@@ -2,7 +2,7 @@ const {Card} = require("../models");
 
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError } = require("../errors");
-const { sessionExpired } = require("../utils");
+const { sessionExpired } = require("../functions");
 
 const getCards = async (req, res) => {
   const accountId = req.params.accountId;
