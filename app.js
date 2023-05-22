@@ -3,7 +3,7 @@ const connectDB = require("./db/connect");
 
 const express = require('express');
 const app = express();
-const session = require('cookie-session');
+const session = require('express-session');
 
 // Middleware imports
 const { limiter, auth } = require("./middleware");
@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to the bank of David");
 })
 
-app.use('/api/v1/auth', authRouter);
+app.use('/auth', authRouter);
 app.use('/api/v1/customers', auth, limiter, customerRouter);
 app.use('/api/v1/transactions', auth, limiter, transactionRouter);
 app.use('/api/v1/account', auth, limiter, accountRouter);

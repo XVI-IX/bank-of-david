@@ -3,7 +3,7 @@ const { REDIS_URL } = process.env
 
 const cron = require("node-cron");
 const Redis = require("ioredis");
-const redis = new Redis(REDIS_URL);
+const redis = new Redis();
 
 const job = require("./cronJob");
 
