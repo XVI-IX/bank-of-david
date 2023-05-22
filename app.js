@@ -4,6 +4,7 @@ const connectDB = require("./db/connect");
 const express = require('express');
 const app = express();
 const session = require('express-session');
+const redisStore = require("connect-redis")(session);
 
 // Middleware imports
 const { limiter, auth } = require("./middleware");
@@ -23,6 +24,7 @@ app.use(session({
   cookie: {
     maxAge: 10 * 60 * 100000,
   },
+  store: new redisStore(process.env.REDIS_URL),
   saveUninitialized: true,
   resave: false
 }))
