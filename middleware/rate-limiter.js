@@ -1,7 +1,8 @@
+require("dotenv").config();
 const { StatusCodes } = require("http-status-codes");
 
 const Redis = require('ioredis');
-const redis = new Redis();
+const redis = new Redis(process.env.REDIS_URL);
 
 const limiter = async (req, res, next) => {
   try {
