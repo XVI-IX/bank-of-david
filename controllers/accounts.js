@@ -1,9 +1,20 @@
 require("dotenv").config();
+const Redis = require("ioredis");
 
 const { Account, Transaction, Schedule } = require("../models")
-const { REDIS_URL } = process.env
-const Redis = require("ioredis");
-const redis = new Redis();
+const {
+  REDIS_SERVICE_NAME,
+  REDIS_PORT
+} = process.env;
+
+// This will only work on Render hosted services
+const redis = new Redis({
+  // Use Render Redis service name as host, red-xxxxxxxxxxxxxxxxxxxx
+  host: REDIS_SERVICE_NAME,
+  // Default Redis port
+  port: REDIS_PORT || 6379,
+});
+
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");

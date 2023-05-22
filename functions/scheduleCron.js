@@ -1,9 +1,21 @@
 require("dotenv").config();
-const { REDIS_URL } = process.env
 
 const cron = require("node-cron");
 const Redis = require("ioredis");
-const redis = new Redis();
+
+const {
+  REDIS_SERVICE_NAME,
+  REDIS_PORT
+} = process.env;
+
+// This will only work on Render hosted services
+const redis = new Redis({
+  // Use Render Redis service name as host, red-xxxxxxxxxxxxxxxxxxxx
+  host: REDIS_SERVICE_NAME,
+  // Default Redis port
+  port: REDIS_PORT || 6379,
+});
+
 
 const job = require("./cronJob");
 
