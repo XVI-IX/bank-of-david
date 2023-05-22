@@ -3,7 +3,7 @@ require("dotenv").config();
 const { Account, Transaction, Schedule } = require("../models")
 const { REDIS_URL } = process.env
 const Redis = require("ioredis");
-const redis = new Redis();
+const redis = new Redis(REDIS_URL);
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");

@@ -3,7 +3,7 @@ const connectDB = require("./db/connect");
 
 const express = require('express');
 const app = express();
-const session = require('express-session');
+const session = require('cookie-session');
 
 // Middleware imports
 const { limiter, auth } = require("./middleware");
