@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 })
 
 app.use('/auth', authRouter);
-app.use('/api/v1/customers', auth, limiter, customerRouter);
+app.use('/api/v1', auth, limiter, customerRouter);
 app.use('/api/v1/transactions', auth, limiter, transactionRouter);
 app.use('/api/v1/account', auth, limiter, accountRouter);
 app.use('/accounts/:accountId/cards', auth, limiter, cardRouter);
