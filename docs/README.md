@@ -37,28 +37,28 @@ This file must contain:
 The database for this project has five models
 #### **`Customer`** 
   This is a representation of every customer that patronizes the application. This model has fields:
-  * **`firstName (Str)`** - Customer's first name
-  * **`middleName (Str)`** - Customer's middle name, this is **optional**
-  * **`lastName (Str)`** - Customer's last name
-  * **`dob (Date)`** - Customer's date of birth
-  * **`address (Str)`** - Customer's home address
-  * **`age (Number)`** - Customer's age. When this is not provided, the field is calculated from the customer's date of birth.
-  * **`email (Str)`** - Customer's email. This field is validated to confirm if email provided matches email patterns
-  * **`password (Str)`** - Customer's password, the password is automatically hashed using the SECRET provided in your **`.env`** file
-  * **`createdAt (Date)`** - Date the customer's account is created.
-  * **`modifiedAt (Date)`** - Date the customer's data was last modified.
-  * **`userName (Str)`** - Customer's username, if not provided a username is generated using the first and lastname. This **`must be unique`**
-  * **`phoneNumber (Number)`** - Customer's phone number, this is also validated to check if the number actually exists.
+  * **`firstName (Str)`** - Customer"s first name
+  * **`middleName (Str)`** - Customer"s middle name, this is **optional**
+  * **`lastName (Str)`** - Customer"s last name
+  * **`dob (Date)`** - Customer"s date of birth
+  * **`address (Str)`** - Customer"s home address
+  * **`age (Number)`** - Customer"s age. When this is not provided, the field is calculated from the customer"s date of birth.
+  * **`email (Str)`** - Customer"s email. This field is validated to confirm if email provided matches email patterns
+  * **`password (Str)`** - Customer"s password, the password is automatically hashed using the SECRET provided in your **`.env`** file
+  * **`createdAt (Date)`** - Date the customer"s account is created.
+  * **`modifiedAt (Date)`** - Date the customer"s data was last modified.
+  * **`userName (Str)`** - Customer"s username, if not provided a username is generated using the first and lastname. This **`must be unique`**
+  * **`phoneNumber (Number)`** - Customer"s phone number, this is also validated to check if the number actually exists.
   * **`bvn`** - Bank verification number
   * **`postalCode`** - Literally, the postal code
 
 #### **`Account`**
-This is a representation of a customer's account. This model has fields:
+This is a representation of a customer"s account. This model has fields:
   * **`customerId`** - Thos is a reference to the id of the customer that owns this account
   * **`accountName (Str)`** - This is the name assigned to the account, it defaults to the first and last name of the customer.
   * **`accountNumber`** - This is to represent the account number, this is a fake number actually.
-  * **`balance`** - Customer's account balance.
-  * **`currency`** - The account's currency
+  * **`balance`** - Customer"s account balance.
+  * **`currency`** - The account"s currency
   * **`createdAt`** - Date of account creation
   * **`modifiedAt`** - last date of account modification.
 
@@ -97,16 +97,16 @@ This stores the transactions processed through this application
 * **Request arguments**: customer details
 ```JSON
 {
-  'firstName': 'John',
-  'middleName': 'Smith',
-  'lastName': 'Doe',
-  'dob': '22-10-23',
-  'address': 'xxxxxxxxxx',
-  'phoneNumber': '+23490101920',
-  'bvn': 'xxxxxxxxxxxx',
-  'postalCode': 'xxxxx',
-  'email': 'xxxxxxxx@xxxx.xxx',
-  'password': 'xxxxxxxx'
+  "firstName": "John",
+  "middleName": "Smith",
+  "lastName": "Doe",
+  "dob": "22-10-23",
+  "address": "xxxxxxxxxx",
+  "phoneNumber": "+23490101920",
+  "bvn": "xxxxxxxxxxxx",
+  "postalCode": "xxxxx",
+  "email": "xxxxxxxx@xxxx.xxx",
+  "password": "xxxxxxxx"
 }
 ```
 * **Return**: User authorization.
@@ -116,8 +116,8 @@ This stores the transactions processed through this application
 * **Request arguments**: email and password
 ```JSON
 {
-  'email': 'xxxxxxxx@xxxx.xxx',
-  'password': 'xxxxxxxx'
+  "email": "xxxxxxxx@xxxx.xxx",
+  "password": "xxxxxxxx"
 }
 ```
 * **Return**: User authorization.
@@ -160,15 +160,109 @@ This stores the transactions processed through this application
 * **Request arguments**: 
 ```JSON
 {
-  'phoneNumber': '+234567890',
-  'email': 'xxxxxxxxx@xxxx.xxxx'
+  "phoneNumber": "+234567890",
+  "email": "xxxxxxxxx@xxxx.xxxx"
 }
 ```
 * **Returns**: JSON object containing success message
 ```JSON
 {
-  'msg': "Profile updated",
-  'success': true
+  "msg": "Profile updated",
+  "success": true
 }
+```
 
+#### `GET account/`
+* Fetches all the accounts owned by user in session
+* **Request Arguments:** None
+* **Returns**:
+
+```JSON
+  {
+    "_id": "645516cd46779324a4e929b",
+    "customerId": "645516cc46779324a4e929ae",
+    "accountName": "David-Daniel Ojebiyi",
+    "accountNumber": 6729442601,
+    "balance": 0,
+    "currency":  "NGN",
+    "createdAt": "2023-05-05T14:44:36.733+00:00",
+    "modifiedAt": "2023-05-05T14:44:36.733+00:00"
+  }
+```
+
+#### `POST account/`
+* Adds a new account for the user in session.
+* **Request Arguments**: 
+```JSON
+{
+  "accountNumber": 6874837281,
+  "currency": "NGN"
+}
+```
+* **Returns**: 
+```JSON
+{
+  "msg": "Account added successfully",
+  "success": true
+}
+```
+
+#### `POST account/:accountId/send`
+* Sends money from account to specified reciever.
+* **Request Arguments**:
+```JSON
+{
+  "amount": 100,
+  "accountNumber": 6874837281,
+  "account_bank": "First Bank",
+  "narration": "Documentation funds"
+}
+```
+
+#### `POST account/:accountId/schedule`
+* Schedules a transaction
+* **Request Arguments**:
+```JSON
+{
+  "schedule_name": "Tola's Allowance",
+  "schedule_date": "2023-05-05T14:44:36.733+00:00", 
+  "amount": 10000,
+  "accountNumber": 6874837281, 
+  "bankCode": 044,
+  "fullName": "Omotolani Ojo", 
+  "bankName": "Access Bank",
+  "frequency": "Monthly"
+}
+```
+* **Returns**: 
+```JSON
+{
+  "success": true,
+  "msg": "Schedule created successfully",
+  "data": {
+    "schedule_name": "Tola's Allowance",
+    "frequency": "Monthly",
+    "amount": 10000,
+    "accountNumber": 6874837281
+  }
+    }
+```
+
+#### `GET account/:accountId/schedule`
+* Fetches all schedules made on the account by user in session
+* **Request Arguments**: None
+* **Returns**: 
+```JSON
+{
+  "schedule_name",
+  "accountId",
+  "customerId",
+  "schedule_date",
+  "amount",
+  "bankCode",
+  "accountNumber",
+  "bankName",
+  "fullName",
+  "frequency"
+}
 ```
