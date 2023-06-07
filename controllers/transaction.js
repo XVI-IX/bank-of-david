@@ -8,7 +8,9 @@ const { sessionExpired } = require("../functions");
 const getTransactions = async (req, res) => {
   const customerId = req.session.customerId;
 
-  sessionExpired();
+  if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   const transactions = await Transaction.find({customerId});
 
@@ -28,7 +30,9 @@ const getTransaction = async (req, res) => {
   const customerId = req.session.customerId;
   const transactionId = req.params.transactionId;
 
-  sessionExpired();
+  if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   const transaction = await Transaction.findById(transactionId);
 

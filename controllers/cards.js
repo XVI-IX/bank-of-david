@@ -7,7 +7,9 @@ const { sessionExpired } = require("../functions");
 const getCards = async (req, res) => {
   const accountId = req.params.accountId;
 
-  sessionExpired();
+  if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
   const cards = await Card.findOne({ accountId: accountId})
                           .select("-cvv -cardNumber");
   
@@ -25,7 +27,9 @@ const getCards = async (req, res) => {
 const addCard = async (req, res) => {
   const accountId = req.params.accountId;
 
-  sessionExpired();
+  if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   req.body['accountId'] = accountId;
   const card = await Card.create({...req.body});
@@ -47,7 +51,9 @@ const deleteCard = async (req, res) => {
   const accountId = req.params.accountId;
   const cardId = req.params.cardId;
 
-  sessionExpired();
+  if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   try {
     await Card.deleteOne({

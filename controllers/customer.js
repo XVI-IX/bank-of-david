@@ -51,7 +51,9 @@ const editCustomerProfile = async (req, res) => {
   const { phoneNumber, email} = req.body;
 
   // console.log(req.session.customerId);
-  sessionExpired();
+  if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   const customer = await Customer.findOne({ _id: req.session.customerId });
   if (!customer) {
@@ -88,7 +90,9 @@ const editCustomerProfile = async (req, res) => {
 const getBalance = async (req, res) => {
   const customerId = req.session.customerId;
 
-  sessionExpired();
+  if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   try {
     const accounts = await Account.find({customerId: customerId});

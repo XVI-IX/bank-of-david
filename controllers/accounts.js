@@ -7,12 +7,14 @@ const redis = new Redis(process.env.REDIS_URL)
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
 const { UnauthenticatedError } = require("../errors");
-const { sessionExpired } = require("../functions");
+// const { sessionExpired } = require("../functions");
 
 const getAccounts = async (req, res) => {
   const customerId = req.session.customerId;
 
-  sessionExpired();
+    if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   try {
     const exists = await redis.exists(`${customerId}accounts`);
@@ -77,7 +79,9 @@ const sendFunds = async (req, res) => {
 
   const customerId = req.session.customerId;
 
-  sessionExpired();
+    if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   const { 
     amount, accountNumber,
@@ -131,7 +135,9 @@ const sendFunds = async (req, res) => {
 
 const schedulePayment = async (req, res) => {
 
-  sessionExpired();
+    if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   const {
     schedule_name,
@@ -228,7 +234,9 @@ const schedulePayment = async (req, res) => {
 const getSchedules = async (req, res) => {
   const customerId = req.session.customerId;
 
-  sessionExpired();
+    if (!req.session.customerId) {
+    throw new UnauthenticatedError("Session Expired");
+  }
 
   try {
     const schedule = await Schedule.find({
