@@ -29,7 +29,7 @@ app.use(session({
 }))
 
 app.get("/", (req, res) => {
-  res.send("Welcome to the bank of David");
+  res.sendFile("./docs/index.html");
 })
 
 app.use('/auth', authRouter);
