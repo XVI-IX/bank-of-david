@@ -240,7 +240,7 @@ const getSchedules = async (req, res) => {
       schedule
     })
   } catch (error) {
-    throw new BadRequestError("Errorororororo");
+    throw new BadRequestError("Schedules could not be fetched");
   }
 }
 

@@ -12,6 +12,13 @@ const getTransactions = async (req, res) => {
 
   const transactions = await Transaction.find({customerId});
 
+  if (!transactions) {
+    return res.status( StatusCodes.NOT_FOUND ).json({
+      error: -1,
+      msg: "No transactions found for user"
+    })
+  }
+
   res.status( StatusCodes.OK ).json({
     transactions
   })
@@ -27,7 +34,7 @@ const getTransaction = async (req, res) => {
 
   if (transaction) {
     if (transaction.customerId === customerId) {
-      return res.status( StatusCodes .OK).json({
+      return res.status( StatusCodes.OK ).json({
         transaction
       });
     } else {

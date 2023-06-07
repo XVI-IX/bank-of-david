@@ -172,7 +172,7 @@ This stores the transactions processed through this application
 }
 ```
 
-#### `GET account/`
+#### `GET accounts/`
 * Fetches all the accounts owned by user in session
 * **Request Arguments:** None
 * **Returns**:
@@ -190,7 +190,7 @@ This stores the transactions processed through this application
   }
 ```
 
-#### `POST account/`
+#### `POST accounts/`
 * Adds a new account for the user in session.
 * **Request Arguments**: 
 ```JSON
@@ -207,7 +207,7 @@ This stores the transactions processed through this application
 }
 ```
 
-#### `POST account/:accountId/send`
+#### `POST accounts/:accountId/send`
 * Sends money from account to specified reciever.
 * **Request Arguments**:
 ```JSON
@@ -219,7 +219,7 @@ This stores the transactions processed through this application
 }
 ```
 
-#### `POST account/:accountId/schedule`
+#### `POST accounts/:accountId/schedule`
 * Schedules a transaction
 * **Request Arguments**:
 ```JSON
@@ -248,7 +248,7 @@ This stores the transactions processed through this application
     }
 ```
 
-#### `GET account/:accountId/schedule`
+#### `GET accounts/:accountId/schedule`
 * Fetches all schedules made on the account by user in session
 * **Request Arguments**: None
 * **Returns**: 
@@ -266,3 +266,122 @@ This stores the transactions processed through this application
   "frequency"
 }
 ```
+
+#### `POST accounts/:accountId/cards/`
+* Adds new card to account of user in session
+* **Request Arguments**: 
+```JSON
+{
+  "accountId": "xxxxxxxxxxxxxxxxxxxx",
+  "cardNumber": 1234567891012141,
+  "cardProvider": "MASTERCARD",
+  "date": "01/25",
+  "cvv": 333,
+}
+```
+* **Returns**:
+  - On success
+  ```JSON
+  {
+    "msg": "Card saved successfully",
+    "success": true
+  }
+  ```
+  - On failure, returns a BAD_GATEWAY error with a json object
+  ```JSON
+  {
+    "error": -1,
+    "msg": "Card details not saved"
+  }
+  ```
+
+#### `GET accounts/:accountId/cards`
+* Fetches all cards linked to an account of user in session
+* **Request Arguments**: None
+* **Returns**: 
+  - On success
+  ```JSON
+  {
+    "_id": "645b9248886c83ff4deda9c1",
+    "accountId": "645516cd46779324a4e929b0",
+    "cardProvider": "MasterCard",
+    "date": "6/2025",
+    "cvv": "458",
+    "displayString": "XXXX-XXXX-XXXX-1474"
+  }
+  ```
+  - On Failure, returns a NotFoundError with JSON response
+    ```JSON
+    {
+      "msg": "No cards found for this customer"
+    }
+    ```
+
+#### `DELETE accounts/:accountId/cards/:cardId`
+* Deletes the card specified by cardId
+* **Request Arguments**: None
+* **Returns**:
+  - On success
+  ```JSON
+  {
+    "msg": "Deleted Successfully",
+    "success": true
+  }
+    
+  ```
+  - **On failure**: Throws a BadRequestError
+
+#### `GET transactions/`
+* Fetches all transactions made by user in session
+* **Request Argument**: None
+* **Returns**: 
+  - On success
+  ```JSON
+  {
+    "accountId",
+    "customerId",
+    "cardId",
+    "date",
+    "amount",
+    "transType",
+    "accountNumber",
+    "bankCode",
+    "fullName",
+    "description",
+    "fees",
+    "reference",
+    "bankName",
+  }
+  ```
+  - On failure, returns a Not Found Error and a JSON object
+  ```JSON
+  {
+    "error": -1,
+    "msg": "No transactions found for this user"
+  }
+  ```
+
+#### `GET transactions/:transactionId`
+* Fetches a information on a particular transaction specified by
+the transaction ID
+* **Request Argument**: None
+* **Returns**: 
+  - On success
+  ```JSON
+  {
+    "accountId",
+    "customerId",
+    "cardId",
+    "date",
+    "amount",
+    "transType",
+    "accountNumber",
+    "bankCode",
+    "fullName",
+    "description",
+    "fees",
+    "reference",
+    "bankName",
+  }
+  ```
+  - On failure, returns a NotFoundError stating transaction record not found.

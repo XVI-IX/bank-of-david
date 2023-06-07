@@ -38,12 +38,12 @@ const addCard = async (req, res) => {
   }
 
   res.status( StatusCodes.OK ).json({
-    msg: "Card saved successfully"
+    msg: "Card saved successfully",
+    success: true
   });
 };
 
 const deleteCard = async (req, res) => {
-  const customerId = req.session.customerId;
   const accountId = req.params.accountId;
   const cardId = req.params.cardId;
 
