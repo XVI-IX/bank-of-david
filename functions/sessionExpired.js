@@ -1,6 +1,6 @@
 const UnauthenticatedError = require('../errors');
 
-const sessionExpired = () => {
+const sessionExpired = (req) => {
   if (!req.session.customerId) {
     throw new UnauthenticatedError("Session Expired");
   }

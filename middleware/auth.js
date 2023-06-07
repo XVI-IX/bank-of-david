@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { UnauthenticatedError } = require("../errors");
+const { UnauthenticatedError, BadRequestError } = require("../errors");
 const { Customer } = require("../models");
 const jwt = require('jsonwebtoken');
 
@@ -14,7 +14,7 @@ const auth = async (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const payload = await jwt.verify(token, process.env.SECRET);
+    const payload = jwt.verify(token, process.env.SECRET);
 
     const customer = await Customer.findById(payload.userId).select(
       '-password -address -age -phoneNumber -bvn -postalCode'
@@ -28,5 +28,9 @@ const auth = async (req, res, next) => {
     throw new UnauthenticatedError("Invalid Credentials");
   }
 }
+
+auth.catch(error => {
+  throw new BadRequestError(error);
+})
 
 module.exports = auth;
