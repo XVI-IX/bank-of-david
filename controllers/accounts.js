@@ -31,8 +31,6 @@ const getAccounts = async (req, res) => {
     } else {
       const accounts = await Account.find({customerId: customerId});
 
-      console.log(accounts);
-
       if (!accounts) {
         throw new NotFoundError("Customer  accounts not found");
       }
