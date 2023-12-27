@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const CardSchema = new mongoose.Schema({
+export const CardSchema = new mongoose.Schema({
   accountId: {
     type: String,
     desc: {

@@ -53,9 +53,6 @@ const login = async (req, res) => {
   })
 }
 
-const testing = (req, res) => {
-  res.send("Testing route");
-}
 
 
 module.exports = {
