@@ -10,7 +10,7 @@ const { limiter, auth } = require("./middleware");
 
 // Router Imports
 const authRouter = require("./routes/auth");
-const customerRouter = require("./routes/customer")
+const customerRouter = require("./routes/user")
 const transactionRouter = require("./routes/transactions");
 const accountRouter = require("./routes/accounts");
 const cardRouter = require("./routes/cards");

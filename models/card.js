@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-export const CardSchema = new mongoose.Schema({
+const CardSchema = new mongoose.Schema({
   accountId: {
     type: String,
     desc: {
@@ -64,3 +64,4 @@ CardSchema.methods.compareValues = function (cardNumber, cvv) {
 }
 
 module.exports = mongoose.model('card', CardSchema);
+exports.CardSchema = CardSchema;

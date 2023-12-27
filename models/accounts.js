@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const mongoose = require("mongoose");
 const { faker } = require('@faker-js/faker');
-const Customer = require('./customer');
+const Customer = require('./user');
 const { CardSchema } = require('./card');
 
 const idSchema = new mongoose.Schema({
@@ -63,7 +63,7 @@ const AccountSchema = new mongoose.Schema({
     enum: ['Savings', 'Current', 'Fixed']
   },
   card: {
-    type: CardSchema
+    type: [CardSchema]
   },
   verified: {
     type: idSchema

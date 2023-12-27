@@ -3,21 +3,20 @@ const router = express.Router();
 
 const {
   getAccounts,
-  addAccount,
+  getAccountById,
+  updateAccount,
+  deleteAccount,
   sendFunds,
   schedulePayment,
   getSchedules
 } = require("../controllers/accounts");
 
+router.post("/", createAccount);
 router.get("/", getAccounts);
-router.get("/:id", getAccountById);
-router.put("/editAccount/:id", updateAccount);
-router.delete("/deleteAccount/:id", deleteAccount);
-// router.post("/", addAccount);
+router.get("/:accountId", getAccountById);
+router.put("/editAccount/:accountId", updateAccount);
+router.delete("/deleteAccount/:accountId", deleteAccount);
 
-router.route("/:accountId/send").post(sendFunds);
-router.route("/:accountId/schedule").post(schedulePayment);
-router.route("/:accountId/schedule").get(getSchedules);
 
 
 module.exports = router;

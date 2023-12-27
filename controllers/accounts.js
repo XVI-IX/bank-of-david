@@ -49,6 +49,34 @@ const getAccounts = async (req, res) => {
   }
 };
 
+const getAccountById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const account = await Account.findById(id);
+
+    if (!account) {
+      throw new NotFoundError("Account not found");
+    }
+
+    return res.status(200).json({
+      message: "Account retrieved successfully",
+      status: "success",
+      data: account
+    });
+  } catch (error) {
+    console.error("Could not retrieve ");
+    throw "Internal Server Error";
+  }
+};
+
+const updateAccount = async (req, res) => {
+
+};
+
+const deleteAccount = async (req, res) => {
+
+};
+
 const addAccount = async (req, res) => {
   const customerId = req.session.customerId;
   const {
@@ -255,5 +283,8 @@ module.exports = {
   addAccount,
   sendFunds,
   schedulePayment,
-  getSchedules
+  getSchedules,
+  getAccountById,
+  updateAccount,
+  deleteAccount,
 }

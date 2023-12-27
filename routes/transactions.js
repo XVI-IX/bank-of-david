@@ -5,7 +5,8 @@ const {
   getTransactions, getTransaction
   } = require('../controllers/transaction');
 
-router.route("/").get(getTransactions);
-router.route("/:transactionId").get(getTransaction);
+router.post("/send", send);
+router.get("/", getTransactions);
+router.get("/:transactionId", getTransaction);
 
 module.exports = router;
