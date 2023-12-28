@@ -1,9 +1,12 @@
 const {
   addBeneficiarySchema,
-  updateBeneficiarySchema
+  updateBeneficiarySchema,
 } = require("./beneficiary");
+
+const feedbackSchema = require("./feedback");
 
 module.exports = {
   addBeneficiarySchema,
-  updateBeneficiarySchema
+  updateBeneficiarySchema,
+  feedbackSchema
 }

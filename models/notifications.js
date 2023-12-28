@@ -14,7 +14,7 @@ const notificationSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ["Transaction", "Security Alert", "Account Update"],
+    enum: ["Transaction", "Security Alert", "Account Update", "Feedback"],
     default: "Account Update"
   },
   /**
@@ -50,6 +50,7 @@ const notificationSchema = new mongoose.Schema({
   expiration_date: {
     type: Date,
     required: true,
+    default: Date.now()
   }
 })
 

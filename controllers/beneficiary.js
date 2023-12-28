@@ -3,9 +3,9 @@ require("dotenv").config();
 const { Beneficiary } = require("../models");
 const { StatusCodes } = require("http-status-codes");
 const {
-  NotFoundError, BadRequestError,
-  UnauthenticatedError, InternalServerError
+  NotFoundError, InternalServerError
 } = require("../errors");
+
 const { addBeneficiarySchema, updateBeneficiarySchema } = require("./schema");
 
 const addBeneficiary = async (req, res) => {
