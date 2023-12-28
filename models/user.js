@@ -7,7 +7,7 @@ const { UnauthenticatedError } = require('../errors');
 const { check } = require('../functions');
 
 
-const CustomerSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: [true, "Please include first name"],
@@ -155,4 +155,4 @@ CustomerSchema.set(
   }
 )
 
-module.exports = mongoose.model('customer', CustomerSchema);
+module.exports = mongoose.model('user', UserSchema);

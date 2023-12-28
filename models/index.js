@@ -1,11 +1,11 @@
-const Customer = require("./user");
+const User = require("./user");
 const Card = require("./card");
 const Transaction = require("./transactions");
 const Account = require("./accounts");
 const Schedule = require("./schedule")
 
 module.exports = {
-  Customer,
+  User,
   Card,
   Transaction,
   Account,

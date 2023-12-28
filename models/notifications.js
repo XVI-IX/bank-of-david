@@ -44,6 +44,9 @@ const notificationSchema = new mongoose.Schema({
     default: "System",
     enum: ["System", "Transaction processing"]
   },
+  /**
+   * an expiration date after which the notification may no longer be relevant.
+   */
   expiration_date: {
     type: Date,
     required: true,
