@@ -1,5 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const {
+  addBeneficiary,
+  getBeneficiary,
+  getBeneficiaries,
+  updateBeneficiary,
+  deleteBeneficiary
+} = require("../controllers/beneficiary")
 
 router.post("/", addBeneficiary);
 router.get("/", getBeneficiaries);

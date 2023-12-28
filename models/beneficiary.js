@@ -62,3 +62,5 @@ const beneficiarySchema = new mongoose.Schema({
 }, {
   timestamps: true
 })
+
+module.exports = mongoose.model("beneficiary", beneficiarySchema);
