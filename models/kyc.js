@@ -24,6 +24,13 @@ const kycSchema = new mongoose.Schema({
     required: true,
   },
   /**
+   * reference to document image
+   */
+  documentImage: {
+    type: String,
+    required: true,
+  },
+  /**
    * KYC verification status
    */
   verificationStatus: {

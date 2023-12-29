@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { getCustomerProfile, 
+const { 
+  getCustomerProfile, 
   editCustomerProfile,
-  getBalance,} = require("../controllers/user");
+  getAccounts,
+  getTransactions
+} = require("../controllers/user");
 
 router.get("/profile", getCustomerProfile);
 router.put("/profile", editCustomerProfile);

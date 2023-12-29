@@ -45,6 +45,13 @@ const notificationSchema = new mongoose.Schema({
     enum: ["System", "Transaction processing"]
   },
   /**
+   * id of user to recieve the notification
+   */
+  // reciever_id: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "user"
+  // },
+  /**
    * an expiration date after which the notification may no longer be relevant.
    */
   expiration_date: {

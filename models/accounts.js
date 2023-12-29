@@ -2,41 +2,23 @@ require('dotenv').config();
 
 const mongoose = require("mongoose");
 const { faker } = require('@faker-js/faker');
-const Customer = require('./user');
+const User = require('./user');
 const { CardSchema } = require('./card');
 
-const idSchema = new mongoose.Schema({
-  idDocument: {
-    type: String,
-    default: "NIN",
-    required: true,
-    enum: ["Driver's License", "Passport", "NIN"]
-  },
-  idImage: {
-    type: String,
-    required: true,
-  },
-  verified: {
-    type: String,
-    required: true,
-    default: false
-  }
-})
-
 const AccountSchema = new mongoose.Schema({
-  customerId: {
+  userId: {
     type: String, 
     desc: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'customer'
+      ref: 'user'
     }
   },
   accountName: {
     type: String,
     required: true,
     default: async function() {
-      const customer = await Customer.findById(this.customerId)
-      return `${customer.firstName} ${customer.lastName}`
+      const user = await User.findById(this.userId)
+      return `${user.firstName} ${user.lastName}`;
     }
   },
   accountNumber: {
@@ -64,12 +46,10 @@ const AccountSchema = new mongoose.Schema({
   },
   card: {
     type: [CardSchema]
-  },
-  verified: {
-    type: idSchema
   }
 }, {
   timestamps: true
 })
 
 module.exports = mongoose.model("account", AccountSchema);
+module.exports = AccountSchema;

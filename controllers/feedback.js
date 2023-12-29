@@ -36,7 +36,14 @@ const sendFeedback = async (req, res) => {
       message: subject,
       category: "Feedback",
       sender_info: contact_info
-    })
+    });
+
+    return res.status(StatusCodes.OK).json({
+      message: "Feedback sent successfully",
+      status: "success",
+      statusCode: StatusCodes.OK,
+      data: feedback
+    });
   } catch (error) {
     console.error(error)
 
@@ -45,4 +52,8 @@ const sendFeedback = async (req, res) => {
       status: "error"
     })
   }
+}
+
+module.exports = {
+  sendFeedback
 }
